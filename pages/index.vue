@@ -19,7 +19,7 @@ function signUpCallback() {
 		<div class="container" id="container" ref="container">
 			<div class="form-container sign-up-container">
 				<form action="#">
-					<h1>Create Account</h1>
+					<h1 class="text-3xl">Create Account</h1>
 					<input type="text" placeholder="Name" />
 					<input type="email" placeholder="Email" />
 					<input type="password" placeholder="Password" />
@@ -28,7 +28,7 @@ function signUpCallback() {
 			</div>
 			<div class="form-container sign-in-container">
 				<form action="#">
-					<h1>Sign in</h1>
+					<h1 class="text-3xl">Sign in</h1>
 					<input type="email" placeholder="Email" />
 					<input type="password" placeholder="Password" />
 					<AuthButton label="signIn" />
@@ -37,14 +37,14 @@ function signUpCallback() {
 			<div class="overlay-container">
 				<div class="overlay">
 					<div class="overlay-panel overlay-left">
-						<h1>Welcome Back!</h1>
+						<h1 class="text-3xl">Welcome Back!</h1>
 						<p>
 							To keep connected with us please login with your personal info
 						</p>
 						<AuthButton overlay-button @click="signInCallback" label="Sign In" />
 					</div>
 					<div class="overlay-panel overlay-right">
-						<h1>Hello, Friend!</h1>
+						<h1 class="text-3xl">Hello, Friend!</h1>
 						<p>Enter your personal details and start journey with us</p>
 						<AuthButton overlay-button id="signUp" @click="signUpCallback" label="Sign Up" />
 					</div>
@@ -62,17 +62,8 @@ function signUpCallback() {
 	justify-content: center;
 	align-items: center;
 	background-image: url('@/assets/img/rainbow-vortex.svg');
-}
-
-body {
-	background: #f6f5f7;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	font-family: 'Montserrat', sans-serif;
-	height: 100vh;
-	margin: -20px 0 50px;
+	background-size: cover;
+	background-repeat: no-repeat;
 }
 
 h1 {
@@ -86,32 +77,6 @@ p {
 	line-height: 20px;
 	letter-spacing: 0.5px;
 	margin: 20px 0 30px;
-}
-
-button {
-	border-radius: 20px;
-	border: 1px solid #FF4B2B;
-	background-color: #FF4B2B;
-	color: #FFFFFF;
-	font-size: 12px;
-	font-weight: bold;
-	padding: 12px 45px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	transition: transform 80ms ease-in;
-}
-
-button:active {
-	transform: scale(0.95);
-}
-
-button:focus {
-	outline: none;
-}
-
-button.ghost {
-	background-color: transparent;
-	border-color: #FFFFFF;
 }
 
 form {
