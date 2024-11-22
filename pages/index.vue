@@ -2,6 +2,10 @@
 import { ref } from "vue";
 import AuthButton from '~/components/auth/Button.vue'
 
+definePageMeta({
+	layout:'auth'
+})
+
 const container = ref(null);
 
 function signInCallback() {
