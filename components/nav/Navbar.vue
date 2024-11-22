@@ -27,12 +27,12 @@
               ></path>
             </svg>
           </button>
-          <a href="https://flowbite.com" class="flex ms-2 md:me-24">
-            <span
-              class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap white:text-white"
-              >ARCD</span
+          <NuxtLink
+            to="/"
+            class="flex ms-2 md:me-24"
             >
-          </a>
+            <img class="app-logo" src="~/assets/img/logo.png" alt="Logo">
+          </NuxtLink>
         </div>
         <div class="flex items-center">
           <div class="flex items-center ms-3">
@@ -183,3 +183,9 @@
     </div>
   </aside>
 </template>
+
+<style lang="css" scoped>
+.app-logo{
+  max-width: 150px;
+}
+</style>
