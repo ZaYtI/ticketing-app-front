@@ -1,6 +1,6 @@
 <template>
     <div class="mt-0">
-        <DashboardTable />
+        <DashboardTable :column-title="columnTitle" />
     </div>
 </template>
 
@@ -45,6 +45,12 @@ const ticketsData = {
     }
 }
 
-</script>
+const columnTitle = [
+    "Product name",
+    "Color",
+    "Category",
+    "Price",
+    "Action"
+]
 
-<style></style>
+</script>

@@ -3,27 +3,14 @@
     <div class="flex justify-between p-3">
       <h1 class="text-2xl p-2">Liste de vos tickets</h1>
       <button type="button"
-        class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Pink
-        to Orange</button>
+        class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">+ Ajouter</button>
     </div>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg ">
       <table class="w-full text-sm text-left rtl:text-right text-gray-500 white:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 white:bg-gray-700 white:text-gray-400">
           <tr>
-            <th scope="col" class="px-6 py-3">
-              Product name
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Color
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Category
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Price
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Action
+            <th scope="col" class="px-6 py-3" v-for="column of columnTitle">
+              {{ column }}
             </th>
           </tr>
         </thead>
@@ -125,6 +112,10 @@
 </template>
 
 <script lang="ts" setup>
-//TODO: ajouter les propriéter pour les filtrer (bouton hash border)
-//TODO: Ajouter une props pour 
+const props = defineProps({
+  columnTitle:{
+    type: Array as () => string[],
+    required: true,
+  }
+})
 </script>

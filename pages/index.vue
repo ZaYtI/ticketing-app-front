@@ -6,14 +6,18 @@ definePageMeta({
 	layout:'auth'
 })
 
-const container = ref(null);
+const container: Ref<HTMLDivElement | null> = ref(null);
 
 function signInCallback() {
-	container.value.classList.remove('right-panel-active');
+	if(container.value){
+		container.value.classList.remove('right-panel-active');
+	}
 };
 
 function signUpCallback() {
-	container.value.classList.add('right-panel-active');
+	if(container.value != null){
+		container.value.classList.add('right-panel-active');
+	}
 };
 
 </script>
