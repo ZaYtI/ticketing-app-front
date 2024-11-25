@@ -12,7 +12,7 @@ export default {
   theme: {
     extend: {},
   },
-  darkMode:false,
+  whiteMode:true,
   plugins: [
     require('flowbite/plugin')
   ],

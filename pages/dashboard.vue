@@ -1,12 +1,15 @@
 <template>
     <div class="mt-0">
-        <DashboardTable :column-title="columnTitle" />
+        <DashboardTable :data="ticketsData" />
     </div>
 </template>
 
 <script lang="ts" setup>
+import type { IPaginatedResponse } from '~/utils/interface/paginated';
+import type { TicketData } from '~/utils/interface/Tickets';
 
-const ticketsData = {
+
+const ticketsData:IPaginatedResponse<TicketData> = {
     items: [
         {
             id: 50,
@@ -44,13 +47,5 @@ const ticketsData = {
         next_pages: null
     }
 }
-
-const columnTitle = [
-    "Product name",
-    "Color",
-    "Category",
-    "Price",
-    "Action"
-]
 
 </script>

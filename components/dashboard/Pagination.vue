@@ -9,6 +9,9 @@
       </svg>
       Previous
     </a>
+    <p class="text-gray-500 font-medium bg-gray-100 px-2 py-1 rounded-lg">
+      {{ props.meta.current_page }}...{{ props.meta.total_pages }}
+    </p>
     <a href="#"
       class="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 white:bg-gray-800 white:border-gray-700 white:text-gray-400 white:hover:bg-gray-700 white:hover:text-white">
       Next
@@ -22,5 +25,12 @@
 </template>
 
 <script lang="ts" setup>
+import type { PaginatedMeta } from '~/utils/interface/paginated';
 
+const props = defineProps({
+  meta:{
+    type : Object as () => PaginatedMeta,
+    required:true
+  }
+})
 </script>
