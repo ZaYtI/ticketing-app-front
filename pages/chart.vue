@@ -1,6 +1,6 @@
 <template>
-    <CardContainer class="mb-3">
-        <h1>Graphiques avec Highcharts</h1>
+  <CardContainer>
+    <h1>Graphiques avec Highcharts</h1>
     <div class="flex justify-around">
       
       <ChartDynamicChart
@@ -30,6 +30,5 @@
         ]"
       />
     </div>
-    </CardContainer>
-    <DashboardTable/>
+  </CardContainer>
 </template>

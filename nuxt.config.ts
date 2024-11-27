@@ -9,4 +9,7 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  plugins: [
+    { src: '~/plugins/highchart-vue.client.ts', mode: 'client' } // Mode client
+  ],
 })
