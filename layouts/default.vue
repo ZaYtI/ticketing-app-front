@@ -36,7 +36,6 @@
   right: 0;
   width: 350px;
   padding: 1rem;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   flex-direction: column-reverse;

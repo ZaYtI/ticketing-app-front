@@ -89,8 +89,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
-import { useQuery } from '@tanstack/vue-query';
+import { ref, computed, watch } from 'vue';
+import { useQuery, keepPreviousData } from '@tanstack/vue-query'
 import { getAllTicket } from '~/composables/ticket';
 
 const currentPage = ref(1);
@@ -99,11 +99,13 @@ const pageSize = ref(10);
 const { 
   isPending, 
   isError, 
-  data 
+  data ,
+  isPlaceholderData
 } = useQuery({
   queryKey: ['tickets', currentPage, pageSize],
   queryFn: () => getAllTicket(pageSize.value, currentPage.value),
-  retry: 1
+  retry: 1,
+  placeholderData: keepPreviousData, 
 });
 
 const columnKeys = computed(() => {
@@ -119,4 +121,8 @@ const handlePageChange = (newPage: number) => {
 const handleItemsPerPageChange = (newItemsPerPage: number) => {
   pageSize.value = newItemsPerPage;
 };
+
+watch([currentPage, pageSize], () => {
+  console.log(`Page actuelle: ${currentPage.value}, Taille de page: ${pageSize.value}`);
+});
 </script>

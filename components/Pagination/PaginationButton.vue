@@ -1,5 +1,5 @@
 <template>
-  <button type="button" class="pagination-button" @click="emit('click')">
+  <button type="button" class="pagination-button">
     <svg
       :class="['w-3.5 h-3.5 rtl:rotate-180', rowDirectionClass]"
       aria-hidden="true"
