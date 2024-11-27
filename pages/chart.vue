@@ -1,6 +1,6 @@
 <template>
-    <CardContainer>
-        <h1>Graphiques avec Highcharts</h1>
+  <CardContainer>
+    <h1>Graphiques avec Highcharts</h1>
     <div class="flex justify-around">
       
       <ChartDynamicChart
@@ -30,24 +30,5 @@
         ]"
       />
     </div>
-    </CardContainer>
-    <div>
-        <span v-if="isPending">Loading...</span>
-        <DashboardTable v-if="data" :data="data" />
-        <span v-if="isError">Il y a une erreur durant la récupération des données</span>
-    </div>    
-   
+  </CardContainer>
 </template>
-
-
-<script lang="ts" setup>
-import { useQuery } from '@tanstack/vue-query'
-import { getAllTicket } from '~/composables/ticket';
-
-const { isPending, isError, data } = useQuery({
-    queryKey: ['tickets'],
-    queryFn: () => getAllTicket(),
-    retry:1
-})
-
-</script>
