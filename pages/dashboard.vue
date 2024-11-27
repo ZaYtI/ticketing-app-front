@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { useQuery } from '@tanstack/vue-query'
-import { getAllTicket } from '~/composable/ticket';
+import { getAllTicket } from '~/composables/ticket';
 
 const { isPending, isError, data } = useQuery({
     queryKey: ['tickets'],
