@@ -39,5 +39,5 @@
 </template>
 
 <script lang="ts" setup>
-
+//TODO:Rendre dynamique le composant
 </script>
