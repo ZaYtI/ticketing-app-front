@@ -1,6 +1,7 @@
 <template>
   <div>
     <button 
+      type="submit"
       :class="{
         'ghost': overlayButton, 
         'submit-button': !overlayButton
