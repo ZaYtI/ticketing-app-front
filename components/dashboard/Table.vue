@@ -9,7 +9,11 @@
         + Ajouter
       </button>
     </div>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+
+    <div v-if="isPending">Loading...</div>
+    <div v-if="isError">Il y a une erreur durant la récupération des données</div>
+
+    <div v-if="data" class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table
         class="w-full text-sm text-left rtl:text-right text-gray-500 white:text-gray-400"
       >
@@ -18,10 +22,10 @@
         >
           <tr>
             <th
-              scope="col"
-              class="px-6 py-3"
               v-for="key of columnKeys"
               :key="key"
+              scope="col"
+              class="px-6 py-3"
             >
               <div class="flex items-center">
                 {{ key }}
@@ -44,14 +48,14 @@
         </thead>
         <tbody>
           <tr
-            class="odd:bg-white odd:white:bg-gray-900 even:bg-gray-50 even:white:bg-gray-800 border-b white:border-gray-700"
-            v-for="(element, index) of props.data.items"
+            v-for="(element, index) in data.items"
             :key="index"
+            class="odd:bg-white odd:white:bg-gray-900 even:bg-gray-50 even:white:bg-gray-800 border-b white:border-gray-700"
           >
             <td
-              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap white:text-white"
               v-for="(value, key) in element"
               :key="key"
+              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap white:text-white"
             >
               <template v-if="key === 'dead_line'">
                 <span
@@ -73,22 +77,46 @@
         </tbody>
       </table>
     </div>
-    <DashboardPagination :meta="data.meta" />
+
+    <DashboardPagination
+      v-if="data"
+      :meta="data.meta"
+      @page-change="handlePageChange"
+      @items-per-page-change="handleItemsPerPageChange"
+      :current-items-per-page="pageSize"
+    />
   </CardContainer>
 </template>
 
 <script lang="ts" setup>
-import type { IPaginatedResponse } from "~/utils/interface/paginated";
-import type { TicketData } from "~/utils/interface/Tickets";
+import { ref, computed } from 'vue';
+import { useQuery } from '@tanstack/vue-query';
+import { getAllTicket } from '~/composables/ticket';
 
-const props = defineProps({
-  data: {
-    type: Object as () => IPaginatedResponse<TicketData>,
-    required: true,
-  },
+const currentPage = ref(1);
+const pageSize = ref(10);
+
+const { 
+  isPending, 
+  isError, 
+  data 
+} = useQuery({
+  queryKey: ['tickets', currentPage, pageSize],
+  queryFn: () => getAllTicket(pageSize.value, currentPage.value),
+  retry: 1
 });
 
 const columnKeys = computed(() => {
-  return props.data.items.length > 0 ? Object.keys(props.data.items[0]) : [];
+  return data.value?.items?.length > 0 
+    ? Object.keys(data.value.items[0]) 
+    : [];
 });
+
+const handlePageChange = (newPage: number) => {
+  currentPage.value = newPage;
+};
+
+const handleItemsPerPageChange = (newItemsPerPage: number) => {
+  pageSize.value = newItemsPerPage;
+};
 </script>

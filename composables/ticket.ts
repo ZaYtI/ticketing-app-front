@@ -2,11 +2,12 @@ import type { IPaginatedResponse } from "~/utils/interface/paginated";
 import type { TicketData } from "~/utils/interface/Tickets";
 
 export async function getAllTicket(
-    filters: Record<string, any> = {},
+    limit = 10,
     page = 1
+
 ): Promise<IPaginatedResponse<TicketData>> {
     const params = new URLSearchParams({
-        ...filters,
+        limit: String(limit),
         page: String(page),
     });
 
