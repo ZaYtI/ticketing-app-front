@@ -6,16 +6,12 @@
   
       <ChartDynamicChart
         :type="'pie'"
-        :title="'Répartition des ventes'"
+        :title="'Répartition des tickets par status'"
         :series="[
           {
-            name: 'Produits',
+            name: 'Nombres',
             colorByPoint: true,
-            data: [
-              { name: 'Produit A', y: 40 },
-              { name: 'Produit B', y: 30 },
-              { name: 'Produit C', y: 30 },
-            ],
+            data: ticketsByStatus,
           },
         ]"
       />
@@ -44,3 +40,28 @@
 
     <DashboardTable/>
 </template>
+
+<script lang="ts" setup>
+import { ref, onMounted } from "vue";
+import { getTicketChart } from "~/composables/ticket";
+
+interface TicketStatusData {
+  name: string;
+  y: number;
+}
+
+const ticketsByStatus = ref<TicketStatusData[]>([]);
+
+onMounted(async () => {
+  try {
+    const chartData = await getTicketChart();
+
+    ticketsByStatus.value = chartData.tickets_by_status.map((item) => ({
+      name: `Statut : ${item.status}`,
+      y: item.count,
+    }));
+  } catch (error) {
+    console.error("Erreur lors de la récupération des données : ", error);
+  }
+});
+</script>
