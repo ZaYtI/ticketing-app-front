@@ -114,8 +114,8 @@
     <div class="h-full px-3 pb-4 overflow-y-auto bg-white white:bg-gray-800">
       <ul class="space-y-2 font-medium">
         <li>
-          <a
-            href="#"
+          <NuxtLink
+            to="/dashboard"
             class="flex items-center p-2 text-gray-900 rounded-lg white:text-white hover:bg-gray-100 white:hover:bg-gray-700 group"
           >
             <svg
@@ -133,7 +133,7 @@
               />
             </svg>
             <span class="ms-3">Dashboard</span>
-          </a>
+          </NuxtLink>
         </li>
         <li>
           <NuxtLink
