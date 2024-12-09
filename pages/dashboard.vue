@@ -17,23 +17,20 @@
       />
 
       <ChartDynamicChart
-      :type="'line'"
-      :title="`Tickets créés sur l'année courante`"
-      :categories="[
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-        'Oct', 'Nov', 'Dec'
-      ]"
-      :title_y-axis="'Tickets créés'"
-      :series="[
-        {
-          name: 'Reggane',
-          data: [
-            16.0, 18.2, 23.1, 27.9, 32.2, 36.4, 39.8, 38.4, 35.5, 29.2,
-            22.0, 17.8
-          ],
-        },
-      ]"
-    />
+                :type="'line'"
+                :title="`Tickets créés sur l'année courante`"
+                :categories="[
+                    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                ]"
+                :title_y_axis="'Tickets créés'"
+                :series="[
+                    {
+                        name: 'Tickets',
+                        data: ticket12LastMonths.map(item => item.count),
+                    },
+                ]"
+            />
       
       </div>
     </CardContainer>
@@ -49,8 +46,13 @@ interface TicketStatusData {
   name: string;
   y: number;
 }
+interface Ticket12LastMonthsData {
+    m: number;
+    count: number;
+}
 
 const ticketsByStatus = ref<TicketStatusData[]>([]);
+const ticket12LastMonths = ref<Ticket12LastMonthsData[]>([]);
 
 onMounted(async () => {
   try {
@@ -58,8 +60,13 @@ onMounted(async () => {
 
     ticketsByStatus.value = chartData.tickets_by_status.map((item) => ({
       name: `Statut : ${item.status}`,
-      y: item.count,
-    }));
+      y: item.count}));
+
+        // Tickets sur 12 derniers mois
+        ticket12LastMonths.value = chartData.tickets_12_last_months.map((item) => ({
+            m: item.m,
+            count: item.count
+        }));
   } catch (error) {
     console.error("Erreur lors de la récupération des données : ", error);
   }

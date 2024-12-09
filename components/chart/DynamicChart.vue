@@ -16,15 +16,24 @@ const props = defineProps<{
   series: Series[];
   type?: string;
   title?: string;
+  categories?: string[];
+  title_y_axis?: string;
 }>();
-
 const chartOptions = computed(() => {
   return {
     chart: {
-      type: props.type, // props est directement accessible
+      type: props.type,
     },
     title: {
       text: props.title,
+    },
+    xAxis: {
+      categories: props.categories || [], 
+    },
+    yAxis: {
+      title: {
+        text: props.title_y_axis || '',
+      },
     },
     series: props.series,
   };
