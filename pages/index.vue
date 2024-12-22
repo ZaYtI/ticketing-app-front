@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import AuthButton from "~/components/auth/Button.vue";
-import { login } from "~/composables/auth";
 
 const email = ref(null);
 const password = ref(null);
@@ -24,9 +23,15 @@ function signUpCallback() {
   }
 }
 
-function onSubmitLogin() {
+async function onSubmitLogin() {
+  const auth = useAuth();
   if (email.value && password.value) {
-    return login(email.value, password.value);
+    return auth.login(email.value, password.value).then(
+      (response) => {
+        console.log("You are logged in")
+        navigateTo('/dashboard')
+      }
+    );
   }
 }
 </script>

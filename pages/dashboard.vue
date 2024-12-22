@@ -1,5 +1,5 @@
 <template>
-  <CardContainer class="mb-3">
+  <CardContainer class="mb-3" v-if="data">
     <div class="grid grid-cols-2 gap-6">
       <ChartDynamicChart
         v-if="ticketsByStatus.length!=0"
@@ -42,17 +42,18 @@
       />
     </div>
   </CardContainer>
-  <DashboardTable :query-function="getAllTicket" title="Liste de vos tickets" query-key="tickets"/>
+  <DashboardTable :query-function="tickets.getAllTicket" title="Liste de vos tickets" query-key="tickets"/>
 </template>
 
 <script lang="ts" setup>
 import { useQuery } from "@tanstack/vue-query";
-import { getTicketChart } from "~/composables/ticket";
 import { Status } from "~/utils/enum/Status";
+
+const tickets = useTickets();
 
 const { data } = useQuery({
   queryKey: ["ticket"],
-  queryFn: () => getTicketChart(),
+  queryFn: () => tickets.getTicketChart(),
   retry: 1,
 });
 
