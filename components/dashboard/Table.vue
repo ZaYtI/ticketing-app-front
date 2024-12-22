@@ -1,7 +1,7 @@
 <template>
   <CardContainer>
     <div class="flex justify-between p-3">
-      <h1 class="text-2xl p-2">Liste de vos tickets</h1>
+      <h1 class="text-2xl p-2">{{ props.title }}</h1>
       <button
         type="button"
         class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 white:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
@@ -9,10 +9,7 @@
         + Ajouter
       </button>
     </div>
-
     <div v-if="isPending">Loading...</div>
-    <div v-if="isError">Il y a une erreur durant la récupération des données</div>
-
     <div v-if="data" class="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table
         class="w-full text-sm text-left rtl:text-right text-gray-500 white:text-gray-400"
@@ -57,16 +54,25 @@
               :key="key"
               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap white:text-white"
             >
-              <template v-if="key === 'dead_line'">
+              <template v-if="key.toString() === 'dead_line'">
                 <span
                   :class="{
                     'font-medium bg-red-600 px-2 py-1 rounded-lg text-white':
-                      value != null && key === 'dead_line',
+                      value != null,
                     'text-gray-500 font-medium bg-gray-100 px-2 py-1 rounded-lg':
                       value == null,
                   }"
                 >
-                  {{ value || "non défini" }}
+                  {{
+                    value
+                      ? new Date(value).toLocaleDateString("fr-FR", {
+                          weekday: "short",
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })
+                      : "non défini"
+                  }}
                 </span>
               </template>
               <template v-else>
@@ -89,29 +95,33 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue';
-import { useQuery, keepPreviousData } from '@tanstack/vue-query'
-import { getAllTicket } from '~/composables/ticket';
+import { ref, computed } from "vue";
+import { useQuery, keepPreviousData } from "@tanstack/vue-query";
+
+const props = defineProps({
+  queryFunction: {
+    type: Function,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  queryKey: {
+    type: String,
+    required: true,
+  },
+});
 
 const currentPage = ref(1);
 const pageSize = ref(10);
 
-const { 
-  isPending, 
-  isError, 
-  data ,
-  isPlaceholderData
-} = useQuery({
-  queryKey: ['tickets', currentPage, pageSize],
-  queryFn: () => getAllTicket(pageSize.value, currentPage.value),
-  retry: 1,
-  placeholderData: keepPreviousData, 
-});
-
 const columnKeys = computed(() => {
-  return data.value?.items?.length > 0 
-    ? Object.keys(data.value.items[0]) 
-    : [];
+  if (data.value) {
+    return data.value.items?.length > 0
+      ? Object.keys(data?.value.items[0])
+      : [];
+  }
 });
 
 const handlePageChange = (newPage: number) => {
@@ -122,7 +132,10 @@ const handleItemsPerPageChange = (newItemsPerPage: number) => {
   pageSize.value = newItemsPerPage;
 };
 
-watch([currentPage, pageSize], () => {
-  console.log(`Page actuelle: ${currentPage.value}, Taille de page: ${pageSize.value}`);
+const { isPending, data } = useQuery({
+  queryKey: [props.queryKey, currentPage, pageSize],
+  queryFn: () => props.queryFunction(pageSize.value, currentPage.value),
+  retry: 1,
+  placeholderData: keepPreviousData,
 });
 </script>
