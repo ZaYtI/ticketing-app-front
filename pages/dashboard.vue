@@ -2,6 +2,7 @@
   <CardContainer class="mb-3">
     <div class="grid grid-cols-2 gap-6">
       <ChartDynamicChart
+        v-if="ticketsByStatus.length!=0"
         type="pie"
         title="Répartition des tickets par status"
         :series="[
@@ -14,6 +15,7 @@
       />
 
       <ChartDynamicChart
+        v-if="ticket12LastMonths.length!=0"
         type="line"
         title="Tickets créer par mois"
         :categories="[
