@@ -1,10 +1,9 @@
 <template>
   <CardContainer class="mb-3">
-    <h1>Graphiques avec Highcharts</h1>
     <div class="grid grid-cols-2 gap-6">
       <ChartDynamicChart
-        :type="'pie'"
-        :title="'Répartition des tickets par status'"
+        type="pie"
+        title="Répartition des tickets par status"
         :series="[
           {
             name: 'Nombres',
