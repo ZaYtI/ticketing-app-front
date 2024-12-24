@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import AuthButton from "~/components/auth/Button.vue";
+import type { FormKitProps } from "~/utils/interface/FormKitProps";
 
 const email = ref(null);
 const password = ref(null);
@@ -29,27 +30,66 @@ async function onSubmitLogin() {
     return auth.login(email.value, password.value);
   }
 }
+
+const loginFields: FormKitProps[] = [
+  {
+    type: 'email',
+    name: 'email',
+    placeholder: 'Enter your email',
+    validation: 'required|email',
+  },
+  {
+    type: 'password',
+    name: 'password',
+    placeholder: 'Enter your password',
+    validation: 'required|min:6',
+  },
+];
+
+const registerFields: FormKitProps[] = [
+  {
+    type: 'text',
+    name: 'name',
+    placeholder: 'Enter your name',
+    validation: 'required',
+  },
+  {
+    type: 'email',
+    name: 'email',
+    placeholder: 'Enter your email',
+    validation: 'required|email',
+  },
+  {
+    type: 'password',
+    name: 'password',
+    placeholder: 'Enter your password',
+    validation: 'required|min:6',
+  },
+];
 </script>
 
 <template>
   <div class="wrapper">
     <div class="container" id="container" ref="container">
       <div class="form-container sign-up-container">
-        <form>
-          <h1 class="text-3xl">Create Account</h1>
-          <input type="text" placeholder="Name" />
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
-          <AuthButton label="signUp" />
-        </form>
+        <Form
+          id="SignUp"
+          submit-label="Enregistrer"
+          :submit-function="onSubmitLogin"
+          :fields="registerFields"
+          >
+          <h1 class="text-3xl">Enregistrement</h1>
+        </Form>
       </div>
       <div class="form-container sign-in-container">
-        <form @submit.prevent="onSubmitLogin">
-          <h1 class="text-3xl">Sign in</h1>
-          <input type="email" placeholder="Email" v-model="email" />
-          <input type="password" placeholder="Password" v-model="password" />
-          <AuthButton label="signIn" />
-        </form>
+        <Form
+          id="signIn"
+          submit-label="Connexion"
+          :submit-function="onSubmitLogin"
+          :fields="loginFields"
+          >
+          <h1 class="text-3xl">Connexion</h1>
+        </Form>
       </div>
       <div class="overlay-container">
         <div class="overlay">
@@ -80,7 +120,7 @@ async function onSubmitLogin() {
   </div>
 </template>
 
-<style scoped>
+<style>
 .wrapper {
   min-height: 100vh;
   width: 100%;
@@ -103,26 +143,6 @@ p {
   line-height: 20px;
   letter-spacing: 0.5px;
   margin: 20px 0 30px;
-}
-
-form {
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 0 50px;
-  height: 100%;
-  text-align: center;
-}
-
-input {
-  background-color: #eee;
-  border: none;
-  border-radius: 1rem;
-  padding: 12px 15px;
-  margin: 8px 0;
-  width: 100%;
 }
 
 .container {
