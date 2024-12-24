@@ -26,12 +26,7 @@ function signUpCallback() {
 async function onSubmitLogin() {
   const auth = useAuth();
   if (email.value && password.value) {
-    return auth.login(email.value, password.value).then(
-      (response) => {
-        console.log("You are logged in")
-        navigateTo('/dashboard')
-      }
-    );
+    return auth.login(email.value, password.value);
   }
 }
 </script>
