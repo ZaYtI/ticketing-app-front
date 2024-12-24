@@ -6,7 +6,7 @@
       <div class="flex flex-row-reverse p-2">
         <button
           type="button"
-          class="btn-gradient"
+          class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-lg text-sm px-5 py-2.5"
         >
           + Ajouter
         </button>
@@ -37,6 +37,9 @@
                   </button>
                 </div>
               </th>
+              <th v-if="asAction">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -63,6 +66,14 @@
                   {{ value }}
                 </template>
               </td>
+              <td v-if="asAction">
+                <div class="flex gap-1">
+                  <button v-for="action in props.actions" class="">
+                    <img class="z-50" :src="action.icon" :alt="action.label">
+                    {{ action.label }}
+                  </button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -80,6 +91,7 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue";
 import { useQuery, keepPreviousData } from "@tanstack/vue-query";
+import type { ButtonAction } from "~/utils/interface/buttonAction";
 
 const props = defineProps({
   queryFunction: {
@@ -94,6 +106,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  actions:{
+    type: Array as () => ButtonAction[],
+    default:[]
+  }
 });
 
 const currentPage = ref(1);
@@ -117,10 +133,8 @@ const handlePageChange = (newPage: number) => {
 const handleItemsPerPageChange = (newItemsPerPage: number) => {
   pageSize.value = newItemsPerPage;
 };
-</script>
 
-<style scoped>
-.btn-gradient {
-  @apply text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-lg text-sm px-5 py-2.5;
-}
-</style>
+const asAction = computed(() => {
+  return props.actions.length > 0;
+})
+</script>

@@ -44,8 +44,6 @@ function getColor(key: string, value: number) {
           return "#2A9134";
         case 2:
           return "#FFD400";
-        case 3:
-          return "#FFA500";
         case 4:
           return "#FF0000";
         default:
