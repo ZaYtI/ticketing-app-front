@@ -56,6 +56,9 @@
                 <template v-else-if="key.toString() === 'priority' || key.toString() === 'status'">
                   <DashboardEnumCell :key-type="key.toString()" :value="value" />
                 </template>
+                <template v-else-if="key.toString() === 'roles'">
+                  <DashboardRoleCell :value="value" />
+                </template>
                 <template v-else>
                   {{ value }}
                 </template>
