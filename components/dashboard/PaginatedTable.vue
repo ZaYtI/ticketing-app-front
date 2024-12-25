@@ -19,9 +19,13 @@
               <th v-for="key in columnKeys" :key="key" class="px-6 py-3">
                 <div class="flex items-center">
                   {{ key }}
-                  <button class="ml-1.5">
+                  <button @click="toggleSort(key)" class="ml-1.5">
                     <svg
                       class="w-3 h-3"
+                      :class="{
+                        'text-blue-600': sortColumn === key,
+                        'rotate-180': sortColumn === key && sortDirection === 'desc'
+                      }"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -39,7 +43,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="(element, index) in data.items"
+              v-for="(element, index) in sortedData"
               :key="index"
               class="border-b odd:bg-white even:bg-gray-50"
             >
@@ -108,6 +112,7 @@
     :modal-function="props.modalFunction"
   />
 </template>
+
 <script lang="ts" setup>
 import { ref, computed } from "vue";
 import { useQuery, keepPreviousData } from "@tanstack/vue-query";
@@ -152,6 +157,8 @@ const props = defineProps({
 
 const currentPage = ref(1);
 const pageSize = ref(10);
+const sortColumn = ref('');
+const sortDirection = ref('asc');
 
 const { data } = useQuery({
   queryKey: [props.queryKey, currentPage, pageSize],
@@ -163,6 +170,34 @@ const { data } = useQuery({
 const columnKeys = computed(() =>
   data.value?.items?.length ? Object.keys(data.value.items[0]) : []
 );
+
+const sortedData = computed(() => {
+  if (!data.value?.items || !sortColumn.value) return data.value?.items;
+
+  return [...data.value.items].sort((a, b) => {
+    const aValue = a[sortColumn.value];
+    const bValue = b[sortColumn.value];
+
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return sortDirection.value === 'asc' 
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue);
+    }
+
+    return sortDirection.value === 'asc'
+      ? aValue - bValue
+      : bValue - aValue;
+  });
+});
+
+const toggleSort = (column: string) => {
+  if (sortColumn.value === column) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortColumn.value = column;
+    sortDirection.value = 'asc';
+  }
+};
 
 const handlePageChange = (newPage: number) => {
   currentPage.value = newPage;
