@@ -1,6 +1,6 @@
 <template>
   <CardContainer class="mb-3" v-if="data">
-    <div class="grid grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <ChartDynamicChart
         v-if="ticketsByStatus.length != 0"
         type="pie"
@@ -42,12 +42,13 @@
       />
     </div>
   </CardContainer>
-  <DashboardTable
+  <DashboardPaginatedTable
     :query-function="tickets.getAllTicket"
     title="Liste de vos tickets"
     query-key="tickets"
     :modal-field="addTicketField"
     :modal-function="tickets.create"
+    link-to="/ticket/"
     add-value
   />
 </template>

@@ -64,35 +64,26 @@
               </div>
               <ul class="py-1" >
                 <li>
-                  <a
-                    href="#"
+                  <NuxtLink
+                    to="/dashboard"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 white:text-gray-300 white:hover:bg-gray-600 white:hover:text-white"
                     role="menuitem"
-                    >Dashboard</a
-                  >
+                    >Accueil</NuxtLink>
+                </li>
+                <li v-if="authStore.isAdmin">
+                  <NuxtLink
+                    to="/users"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 white:text-gray-300 white:hover:bg-gray-600 white:hover:text-white"
+                    role="menuitem"
+                    >Utlisateurs</NuxtLink>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <NuxtLink
+                    @click.native="auth.logout"
+                    to="/"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 white:text-gray-300 white:hover:bg-gray-600 white:hover:text-white"
                     role="menuitem"
-                    >Settings</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 white:text-gray-300 white:hover:bg-gray-600 white:hover:text-white"
-                    role="menuitem"
-                    >Earnings</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 white:text-gray-300 white:hover:bg-gray-600 white:hover:text-white"
-                    role="menuitem"
-                    >Sign out</a
+                    >Déconnexion</NuxtLink
                   >
                 </li>
               </ul>
@@ -129,7 +120,7 @@
                 d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"
               />
             </svg>
-            <span class="ms-3">Dashboard</span>
+            <span class="ms-3">Accueil</span>
           </NuxtLink>
         </li>
         <li>
@@ -149,13 +140,13 @@
                 d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
               />
             </svg>
-            <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
+            <span class="flex-1 ms-3 whitespace-nowrap">Utilisateurs</span>
           </NuxtLink>
         </li>
         <li>
           <NuxtLink
             @click.native="auth.logout"
-            href="/"
+            to="/"
             class="flex items-center p-2 text-gray-900 rounded-lg white:text-white hover:bg-gray-100 white:hover:bg-gray-700 group"
           >
             <svg
@@ -175,7 +166,7 @@
                 d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z"
               />
             </svg>
-            <span class="flex-1 ms-3 whitespace-nowrap">Sign Out</span>
+            <span class="flex-1 ms-3 whitespace-nowrap">Déconnexion</span>
           </NuxtLink>
         </li>
       </ul>

@@ -1,6 +1,6 @@
 <template>
   <div>
-      <DashboardTable :query-function="getAllUser" title="Liste des utilisateurs de l'application" query-key="users" />
+      <DashboardPaginatedTable :query-function="getAllUser" title="Liste des utilisateurs de l'application" query-key="users" />
   </div>
 </template>
 

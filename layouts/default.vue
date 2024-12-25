@@ -2,8 +2,7 @@
   <div class="default-layout">
     <NavNavbar />
     <main class="default-layout-content p-4 sm:ml-64">
-      <NavBreadCrumbs class="p-2 mt-12" />
-      <div class="p-4">
+      <div class="p-4 mt-12">
         <slot />
       </div>
     </main>

@@ -32,6 +32,21 @@ export function useTickets(){
         return response;
     }
 
+    async function getTicketDetails(ticketId:number){
+        const response = await $fetch<TicketData>(
+            `http://localhost:8000/api/ticket/${ticketId}`,
+            {
+                method: "GET",
+                credentials:'include',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+    
+        return response;
+    }
+
     async function getTicketChart(): Promise<ChartInfo> {
         const response = await $fetch<ChartInfo>(
             `http://localhost:8000/api/ticket/chart`,
@@ -76,6 +91,7 @@ export function useTickets(){
         getAllTicket,
         getTicketChart,
         create,
-        getAssignableUser
+        getAssignableUser,
+        getTicketDetails
     }
 }

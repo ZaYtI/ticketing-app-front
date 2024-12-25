@@ -45,7 +45,15 @@
               class="border-b odd:bg-white even:bg-gray-50"
             >
               <td v-for="(value, key) in element" :key="key" class="px-6 py-4">
-                <template v-if="key.toString() === 'dead_line'">
+                <template v-if="key.toString() === 'id' && props.linkTo!= null">
+                  <NuxtLink
+                  :to="props.linkTo+value">
+                    <span class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                      #{{ value }}
+                    </span>
+                  </NuxtLink>
+                </template>
+                <template v-else-if="key.toString() === 'dead_line'">
                   <DashboardDeadLineCell :value="value" />
                 </template>
                 <template
@@ -130,6 +138,10 @@ const props = defineProps({
   addValue:{
     type:Boolean,
     default:false
+  },
+  linkTo:{
+    type: String || null,
+    default:null
   }
 });
 
