@@ -91,7 +91,8 @@ export function useTickets(){
     }
 
     async function update (formData:FormData) {
-        const response = await fetch('http://localhost:8000/api/ticket', {
+        const route = useRoute();
+        const response = await fetch(`http://localhost:8000/api/ticket/${route.params.id}`, {
             method: 'PUT',
             credentials: 'include',
             headers: {
@@ -99,7 +100,7 @@ export function useTickets(){
             },
             body: JSON.stringify(formData),
         });
-
+        queryClient.invalidateQueries();
         return response;
     }
 
