@@ -56,6 +56,9 @@
                 <template v-else-if="key.toString() === 'dead_line'">
                   <DashboardDeadLineCell :value="value" />
                 </template>
+                <template v-else-if="key.toString() === 'created_at'">
+                  <DashboardDeadLineCell :value="value" no-color/>
+                </template>
                 <template
                   v-else-if="
                     key.toString() === 'priority' || key.toString() === 'status'

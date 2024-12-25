@@ -11,7 +11,8 @@ export interface TicketData {
     status:number;
     priority:number;
     description:string;
-    assigner_to:User;
+    assign_to:User;
+    created_by:User;
     dead_line:string|null;
     statusHistory?:StatusHistory[];
 }

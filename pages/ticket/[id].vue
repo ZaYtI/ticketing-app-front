@@ -28,7 +28,6 @@
         </button>
       </div>
 
-      <!-- Ticket Details -->
       <div v-if="data">
         <div class="bg-white shadow-lg rounded-lg p-4 mb-4">
           <strong class="block font-medium text-gray-700">Titre:</strong>
@@ -49,24 +48,34 @@
         <div class="bg-white shadow-lg rounded-lg p-4 mb-4">
           <strong class="block font-medium text-gray-700">Assigné à:</strong>
           <a
-            v-if="data.assigner_to != null"
+            v-if="data.assign_to != null"
             class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-            :href="'mailto:' + data.assigner_to.email"
-            >{{ data?.assigner_to.email }}</a
+            :href="'mailto:' + data.assign_to.email"
+            >{{ data?.assign_to.email }}</a
           >
           <span v-else class="text-xs text-gray-400"
             >Le ticket n'est pas encore assginer</span
+          >
+        </div>
+        <div class="bg-white shadow-lg rounded-lg p-4 mb-4">
+          <strong class="block font-medium text-gray-700">Créer par:</strong>
+          <a
+            v-if="data.created_by != null"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            :href="'mailto:' + data.assign_to.email"
+            >{{ data?.created_by.email }}</a
           >
         </div>
       </div>
     </CardContainer>
 
     <DashboardModal
+      v-if="data"
       @close-modal="closeModal"
       modal-title="Modifier le ticket"
       modal-id="update-ticket"
       :is-modal-open="isModalOpen"
-      :fields="addTicketField"  
+      :fields="updateTicketField"  
       :modal-function="tickets.update"
     />
 
@@ -82,7 +91,7 @@
 import { ref, computed } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { useRoute } from "vue-router";
-import { addTicketField } from "~/utils/global/ticketField";
+import type { FormKitProps } from "~/utils/interface/FormKitProps";
 
 const route = useRoute();
 const tickets = useTickets();
@@ -94,12 +103,59 @@ const { data } = useQuery({
   retry: 1,
 });
 
+const updateTicketField = ref<FormKitProps[][]>([
+  [
+    {
+      type: "text",
+      name: "title",
+      placeholder: "Entrez le titre du ticket",
+    },
+  ],
+  [
+    {
+      type: "select",
+      name: "status",
+      options: {
+        1: "Ouvert",
+        2: "En Attente",
+        3: "Résolue",
+        4: "Fermé",
+      },
+      placeholder:"Status"
+    },
+    {
+      type: "select",
+      name: "priority",
+      options: {
+        1: "Faible",
+        2: "Moyenne",
+        3: "Important",
+      },
+      placeholder:"Priorité"
+    },
+  ],
+  [
+    {
+      type: "textarea",
+      name: "description",
+      placeholder: "Décrivez le problème",
+    },
+  ],
+  [
+    {
+      type: "datetime-local",
+      label: "Date limite",
+      name: "dead_line",
+    },
+  ],
+]);
+
 function openModal() {
   isModalOpen.value = true;
 }
 
 function closeModal() {
-  console.log('close modal')
+  console.log('close modal');
   isModalOpen.value = false;
 }
 
@@ -111,3 +167,4 @@ const columnKeys = computed(() =>
   statusHistoryData.value.length ? Object.keys(statusHistoryData.value[0]) : []
 );
 </script>
+
