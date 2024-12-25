@@ -3,14 +3,13 @@ import { ref } from "vue";
 import AuthButton from "~/components/auth/Button.vue";
 import type { FormKitProps } from "~/utils/interface/FormKitProps";
 
-const email = ref(null);
-const password = ref(null);
-
 definePageMeta({
   layout: "auth",
 });
 
 const container: Ref<HTMLDivElement | null> = ref(null);
+
+const auth = useAuth();
 
 function signInCallback() {
   if (container.value) {
@@ -24,47 +23,74 @@ function signUpCallback() {
   }
 }
 
-async function onSubmitLogin() {
-  const auth = useAuth();
-  if (email.value && password.value) {
-    return auth.login(email.value, password.value);
-  }
+async function onSubmitLogin(formData: Record<string, any>) {
+  await auth.login(formData.email, formData.password).then(
+    (response) => {
+      navigateTo('/dashboard')
+    }
+  ).catch();
 }
 
+
+async function onSubmitRegister(formData: Record<string, any>) {
+  await auth.register(formData.email, formData.password).then(
+    (response) => {
+      onSubmitLogin(formData)
+    });
+}
 const loginFields: FormKitProps[] = [
   {
     type: 'email',
     name: 'email',
     placeholder: 'Enter your email',
     validation: 'required|email',
+    validationMessages: {
+      required: 'L\'email est requis',
+      email: 'Veuillez entrer une adresse email valide'
+    }
   },
   {
     type: 'password',
     name: 'password',
     placeholder: 'Enter your password',
-    validation: 'required|min:6',
+    validation: 'required',
+    validationMessages: {
+      required: 'Le mot de passe est requis'
+    }
   },
 ];
 
 const registerFields: FormKitProps[] = [
   {
-    type: 'text',
-    name: 'name',
-    placeholder: 'Enter your name',
-    validation: 'required',
-  },
-  {
     type: 'email',
     name: 'email',
     placeholder: 'Enter your email',
     validation: 'required|email',
+    validationMessages: {
+      required: 'L\'email est requis',
+      email: 'Veuillez entrer une adresse email valide'
+    }
   },
   {
     type: 'password',
     name: 'password',
-    placeholder: 'Enter your password',
-    validation: 'required|min:6',
+    validation: "required|?length:6",
+    placeholder: 'Mot de passe',
+    validationMessages: {
+      required: 'Le mot de passe est requis',
+      length: 'Le mot de passe doit contenir au moins 6 caractères'
+    }
   },
+  {
+    type: "password",
+    name: "password_confirm",
+    validation: "required|confirm",
+    placeholder: 'Confirmer le mot de passe',
+    validationMessages: {
+      required: 'La confirmation du mot de passe est requise',
+      confirm: 'Les mots de passe ne correspondent pas'
+    }
+  }
 ];
 </script>
 
@@ -75,20 +101,20 @@ const registerFields: FormKitProps[] = [
         <Form
           id="SignUp"
           submit-label="Enregistrer"
-          :submit-function="onSubmitLogin"
           :fields="registerFields"
+          title="Enregistrement"
+          @submit="onSubmitRegister"
           >
-          <h1 class="text-3xl">Enregistrement</h1>
         </Form>
       </div>
       <div class="form-container sign-in-container">
         <Form
           id="signIn"
           submit-label="Connexion"
-          :submit-function="onSubmitLogin"
           :fields="loginFields"
+          title="Connexion"
+          @submit="onSubmitLogin"
           >
-          <h1 class="text-3xl">Connexion</h1>
         </Form>
       </div>
       <div class="overlay-container">
@@ -130,11 +156,6 @@ const registerFields: FormKitProps[] = [
   background-image: url("@/assets/img/rainbow-vortex.svg");
   background-size: cover;
   background-repeat: no-repeat;
-}
-
-h1 {
-  font-weight: bold;
-  margin: 1rem 0 1rem 0;
 }
 
 p {

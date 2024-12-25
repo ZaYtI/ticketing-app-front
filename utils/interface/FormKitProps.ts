@@ -6,5 +6,6 @@ export interface FormKitProps {
   value?: string | number | boolean | null;
   options?: { label: string; value: string | number }[];
   validation?: string;
+  validationMessages?: Record<string, string>;
   disabled?: boolean;
 }

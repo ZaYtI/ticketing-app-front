@@ -15,7 +15,24 @@ export function useAuth(){
   
     return response;  
   }
+
+  async function register(email: string, password: string) {
+    const response = await $fetch(`http://localhost:8000/api/register`, {
+      method: "POST",  
+      credentials:'include',
+      headers: {
+        "Content-Type": "application/json",  
+      },
+      body: {
+        'email': email,
+        'password': password,
+      },  
+    });
+  
+    return response;  
+  }
   return {
-    login
+    login,
+    register
   }
 }
