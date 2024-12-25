@@ -153,7 +153,7 @@ const props = defineProps({
 const currentPage = ref(1);
 const pageSize = ref(10);
 
-const { isPending, data } = useQuery({
+const { data } = useQuery({
   queryKey: [props.queryKey, currentPage, pageSize],
   queryFn: () => props.queryFunction(pageSize.value, currentPage.value),
   retry: 1,
