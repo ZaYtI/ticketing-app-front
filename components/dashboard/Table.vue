@@ -5,8 +5,9 @@
     <div v-if="data">
       <div class="flex flex-row-reverse p-2">
         <button
-          type="button"
+          @click="openModal"
           class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-lg text-sm px-5 py-2.5"
+          type="button"
         >
           + Ajouter
         </button>
@@ -15,11 +16,7 @@
         <table class="w-full text-sm text-gray-500 text-left rtl:text-right">
           <thead class="bg-gray-50 text-xs text-gray-700 uppercase">
             <tr>
-              <th
-                v-for="key in columnKeys"
-                :key="key"
-                class="px-6 py-3"
-              >
+              <th v-for="key in columnKeys" :key="key" class="px-6 py-3">
                 <div class="flex items-center">
                   {{ key }}
                   <button class="ml-1.5">
@@ -37,9 +34,7 @@
                   </button>
                 </div>
               </th>
-              <th v-if="asAction">
-                Actions
-              </th>
+              <th v-if="asAction">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -48,16 +43,19 @@
               :key="index"
               class="border-b odd:bg-white even:bg-gray-50"
             >
-              <td
-                v-for="(value, key) in element"
-                :key="key"
-                class="px-6 py-4"
-              >
+              <td v-for="(value, key) in element" :key="key" class="px-6 py-4">
                 <template v-if="key.toString() === 'dead_line'">
                   <DashboardDeadLineCell :value="value" />
                 </template>
-                <template v-else-if="key.toString() === 'priority' || key.toString() === 'status'">
-                  <DashboardEnumCell :key-type="key.toString()" :value="value" />
+                <template
+                  v-else-if="
+                    key.toString() === 'priority' || key.toString() === 'status'
+                  "
+                >
+                  <DashboardEnumCell
+                    :key-type="key.toString()"
+                    :value="value"
+                  />
                 </template>
                 <template v-else-if="key.toString() === 'roles'">
                   <DashboardRoleCell :value="value" />
@@ -69,7 +67,7 @@
               <td v-if="asAction">
                 <div class="flex gap-1">
                   <button v-for="action in props.actions" class="">
-                    <img class="z-50" :src="action.icon" :alt="action.label">
+                    <img class="z-50" :src="action.icon" :alt="action.label" />
                     {{ action.label }}
                   </button>
                 </div>
@@ -86,12 +84,19 @@
       />
     </div>
   </CardContainer>
+  <DashboardModal
+    modal-title="Ajouter un ticket"
+    modal-id="add-ticket"
+    :is-modal-open="isModalOpen"
+    @close-modal="closeModal"
+    :fields="props.modalField"
+  />
 </template>
-
 <script lang="ts" setup>
 import { ref, computed } from "vue";
 import { useQuery, keepPreviousData } from "@tanstack/vue-query";
 import type { ButtonAction } from "~/utils/interface/buttonAction";
+import type { FormKitProps } from "~/utils/interface/FormKitProps";
 
 const props = defineProps({
   queryFunction: {
@@ -106,9 +111,14 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  actions:{
+  actions: {
     type: Array as () => ButtonAction[],
-    default:[]
+    default: [],
+  },
+  modalField:{
+    type: Array as () => FormKitProps[][],
+    required: true,
+    default: () => [],
   }
 });
 
@@ -136,5 +146,15 @@ const handleItemsPerPageChange = (newItemsPerPage: number) => {
 
 const asAction = computed(() => {
   return props.actions.length > 0;
-})
+});
+
+const isModalOpen = ref(false);
+
+const openModal = () => {
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
 </script>

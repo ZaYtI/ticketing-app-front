@@ -6,20 +6,27 @@
     @submit="handleSubmit"
   >
     <h1 v-if="props.title" class="text-3xl form-title">{{ props.title }}</h1>
+    
     <div class="flex flex-col gap-4">
-      <FormKit
-        v-for="field in props.fields"
-        :type="field.type"
-        :name="field.name"
-        :label="field.label"
-        :placeholder="field.placeholder"
-        :validation="field.validation"
-        :validation-messages="field.validationMessages"
-        :classes="{
-          input: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
-          messages: 'text-red-600 text-xs',
-        }"
-      />
+      <div v-for="(field, index) in props.fields" :key="index" class="field-wrapper">
+        <div v-if="Array.isArray(field)" class="flex gap-4">
+          <div v-for="(subField, subIndex) in field" :key="subIndex" class="flex-1">
+            <FormKit
+              :type="subField.type"
+              :name="subField.name"
+              :label="subField.label"
+              :placeholder="subField.placeholder"
+              :validation="subField.validation"
+              :validation-messages="subField.validationMessages"
+              :options="subField.options"
+              :classes="{
+                input: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+                messages: 'text-red-600 text-xs',
+              }"
+            />
+          </div>
+        </div>
+      </div>
       <AuthButton type="submit" :label="submitLabel"/>
     </div>
   </FormKit>
@@ -29,7 +36,7 @@
 import { defineProps } from "vue";
 import type { FormKitProps } from "~/utils/interface/FormKitProps";
 
-const emits = defineEmits(['submit'])
+const emits = defineEmits(['submit']);
 const props = defineProps({
   id: {
     type: String,
@@ -40,7 +47,7 @@ const props = defineProps({
     required: true,
   },
   fields: {
-    type: Array as () => FormKitProps[],
+    type: Array as () => FormKitProps[][],
     required: true,
     default: () => [],
   },
@@ -51,7 +58,7 @@ const props = defineProps({
 });
 
 function handleSubmit(formData: any) {
-  emits('submit', formData)
+  emits('submit', formData);
 }
 </script>
 
@@ -61,7 +68,6 @@ form {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  padding: 0 50px;
   height: 100%;
   text-align: center;
 }
@@ -75,12 +81,26 @@ form {
   width: 100%;
 }
 
-.formkit-inner {
-  background: red;
-}
-
 .form-title {
   font-weight: bold;
   margin: 1rem 0 1rem 0;
+}
+
+/* Styles pour les groupes de champs */
+.flex {
+  display: flex;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.field-item {
+  flex: 1;
+  min-width: 200px;
 }
 </style>

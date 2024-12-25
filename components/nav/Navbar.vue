@@ -43,7 +43,7 @@
                 aria-expanded="false"
                 data-dropdown-toggle="dropdown-user"
               >
-                <span class="sr-only">Open user menu</span>
+                <span class="sr-only">Menu utilisateurs</span>
                 <img
                   class="w-8 h-8 rounded-full"
                   src="~/assets/img/avatar.png"
@@ -56,13 +56,10 @@
               id="dropdown-user"
             >
               <div class="px-4 py-3" >
-                <p class="text-sm text-gray-900 white:text-white">
-                  Neil Sims
-                </p>
                 <p
                   class="text-sm font-medium text-gray-900 truncate white:text-gray-300"
                 >
-                  neil.sims@flowbite.com
+                  {{ authStore.user?.email }}
                 </p>
               </div>
               <ul class="py-1" >
@@ -137,6 +134,7 @@
         </li>
         <li>
           <NuxtLink
+            v-if="authStore.isAdmin"
             to="/users"
             class="flex items-center p-2 text-gray-900 rounded-lg white:text-white hover:bg-gray-100 white:hover:bg-gray-700 group"
           >
@@ -155,8 +153,9 @@
           </NuxtLink>
         </li>
         <li>
-          <a
-            href="#"
+          <NuxtLink
+            @click.native="auth.logout"
+            href="/"
             class="flex items-center p-2 text-gray-900 rounded-lg white:text-white hover:bg-gray-100 white:hover:bg-gray-700 group"
           >
             <svg
@@ -177,12 +176,19 @@
               />
             </svg>
             <span class="flex-1 ms-3 whitespace-nowrap">Sign Out</span>
-          </a>
+          </NuxtLink>
         </li>
       </ul>
     </div>
   </aside>
 </template>
+
+<script lang="ts" setup>
+import { useAuthStore } from '~/stores/auth';
+
+const auth = useAuth()
+const authStore = useAuthStore()
+</script>
 
 <style lang="css" scoped>
 .app-logo{

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import AuthButton from "~/components/auth/Button.vue";
+import { useAuthStore } from "~/stores/auth";
 import type { FormKitProps } from "~/utils/interface/FormKitProps";
 
 definePageMeta({
@@ -10,6 +11,7 @@ definePageMeta({
 const container: Ref<HTMLDivElement | null> = ref(null);
 
 const auth = useAuth();
+const authStore = useAuthStore();
 
 function signInCallback() {
   if (container.value) {
@@ -24,73 +26,87 @@ function signUpCallback() {
 }
 
 async function onSubmitLogin(formData: Record<string, any>) {
-  await auth.login(formData.email, formData.password).then(
-    (response) => {
-      navigateTo('/dashboard')
-    }
-  ).catch();
+  await auth
+    .login(formData.email, formData.password)
+    .then((response) => {
+      navigateTo("/dashboard");
+      auth.checkAuth();
+    })
+    .catch();
 }
-
 
 async function onSubmitRegister(formData: Record<string, any>) {
-  await auth.register(formData.email, formData.password).then(
-    (response) => {
-      onSubmitLogin(formData)
-    });
+  await auth.register(formData.email, formData.password).then((response) => {
+    onSubmitLogin(formData);
+  });
 }
-const loginFields: FormKitProps[] = [
-  {
-    type: 'email',
-    name: 'email',
-    placeholder: 'Enter your email',
-    validation: 'required|email',
-    validationMessages: {
-      required: 'L\'email est requis',
-      email: 'Veuillez entrer une adresse email valide'
-    }
-  },
-  {
-    type: 'password',
-    name: 'password',
-    placeholder: 'Enter your password',
-    validation: 'required',
-    validationMessages: {
-      required: 'Le mot de passe est requis'
-    }
-  },
+
+async function logout() {
+  auth.logout();
+}
+const loginFields: FormKitProps[][] = [
+  [
+    {
+      type: "email",
+      name: "email",
+      placeholder: "Enter your email",
+      validation: "required|email",
+      validationMessages: {
+        required: "L'email est requis",
+        email: "Veuillez entrer une adresse email valide",
+      },
+    },
+  ],
+  [
+    {
+      type: "password",
+      name: "password",
+      placeholder: "Enter your password",
+      validation: "required",
+      validationMessages: {
+        required: "Le mot de passe est requis",
+      },
+    },
+  ],
 ];
 
-const registerFields: FormKitProps[] = [
-  {
-    type: 'email',
-    name: 'email',
-    placeholder: 'Enter your email',
-    validation: 'required|email',
-    validationMessages: {
-      required: 'L\'email est requis',
-      email: 'Veuillez entrer une adresse email valide'
-    }
-  },
-  {
-    type: 'password',
-    name: 'password',
-    validation: "required|?length:6",
-    placeholder: 'Mot de passe',
-    validationMessages: {
-      required: 'Le mot de passe est requis',
-      length: 'Le mot de passe doit contenir au moins 6 caractères'
-    }
-  },
-  {
-    type: "password",
-    name: "password_confirm",
-    validation: "required|confirm",
-    placeholder: 'Confirmer le mot de passe',
-    validationMessages: {
-      required: 'La confirmation du mot de passe est requise',
-      confirm: 'Les mots de passe ne correspondent pas'
-    }
-  }
+const registerFields: FormKitProps[][] = [
+  [
+    {
+      type: "email",
+      name: "email",
+      placeholder: "Enter your email",
+      validation: "required|email",
+      validationMessages: {
+        required: "L'email est requis",
+        email: "Veuillez entrer une adresse email valide",
+      },
+    },
+  ],
+  [
+    {
+      type: "password",
+      name: "password",
+      validation: "required|?length:6",
+      placeholder: "Mot de passe",
+      validationMessages: {
+        required: "Le mot de passe est requis",
+        length: "Le mot de passe doit contenir au moins 6 caractères",
+      },
+    },
+  ],
+  [
+    {
+      type: "password",
+      name: "password_confirm",
+      validation: "required|confirm",
+      placeholder: "Confirmer le mot de passe",
+      validationMessages: {
+        required: "La confirmation du mot de passe est requise",
+        confirm: "Les mots de passe ne correspondent pas",
+      },
+    },
+  ],
 ];
 </script>
 
@@ -104,7 +120,7 @@ const registerFields: FormKitProps[] = [
           :fields="registerFields"
           title="Enregistrement"
           @submit="onSubmitRegister"
-          >
+        >
         </Form>
       </div>
       <div class="form-container sign-in-container">
@@ -114,7 +130,7 @@ const registerFields: FormKitProps[] = [
           :fields="loginFields"
           title="Connexion"
           @submit="onSubmitLogin"
-          >
+        >
         </Form>
       </div>
       <div class="overlay-container">
@@ -182,6 +198,7 @@ p {
   top: 0;
   height: 100%;
   transition: all 0.6s ease-in-out;
+  padding: 0 50px;
 }
 
 .sign-in-container {

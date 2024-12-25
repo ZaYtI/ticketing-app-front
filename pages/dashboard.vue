@@ -2,7 +2,7 @@
   <CardContainer class="mb-3" v-if="data">
     <div class="grid grid-cols-2 gap-6">
       <ChartDynamicChart
-        v-if="ticketsByStatus.length!=0"
+        v-if="ticketsByStatus.length != 0"
         type="pie"
         title="Répartition des tickets par status"
         :series="[
@@ -15,7 +15,7 @@
       />
 
       <ChartDynamicChart
-        v-if="ticket12LastMonths.length!=0"
+        v-if="ticket12LastMonths.length != 0"
         type="line"
         title="Tickets créer par mois"
         :categories="[
@@ -42,12 +42,19 @@
       />
     </div>
   </CardContainer>
-  <DashboardTable :query-function="tickets.getAllTicket" title="Liste de vos tickets" query-key="tickets"/>
+  <DashboardTable
+    :query-function="tickets.getAllTicket"
+    title="Liste de vos tickets"
+    query-key="tickets"
+    :modal-field="addTicketField"
+  />
 </template>
 
 <script lang="ts" setup>
 import { useQuery } from "@tanstack/vue-query";
+import { Priority } from "~/utils/enum/Priority";
 import { Status } from "~/utils/enum/Status";
+import type { FormKitProps } from "~/utils/interface/FormKitProps";
 
 const tickets = useTickets();
 
@@ -58,22 +65,85 @@ const { data } = useQuery({
 });
 
 const ticketsByStatus = computed(() => {
-  if(data.value){
+  if (data.value) {
     return data.value.tickets_by_status.map((item) => ({
       name: Status[item.status],
-      y: item.count
-    }))
+      y: item.count,
+    }));
   }
   return [];
-})
+});
 
 const ticket12LastMonths = computed(() => {
-  if(data.value){
+  if (data.value) {
     return data.value.tickets_12_last_months.map((item) => ({
       m: item.m,
       count: item.count,
-    }))
-  } 
-  return []
-})
+    }));
+  }
+  return [];
+});
+
+const addTicketField: FormKitProps[][] = [
+  [
+    {
+      type: "text",
+      name: "title",
+      placeholder: "Entrez le titre du ticket",
+      validation: "required",
+      validationMessages: {
+        required: "Le titre est requis",
+      },
+    },
+  ],
+  [
+    {
+      type: "select",
+      name: "status",
+      options: Object.entries(Status).map(([key, value]) => ({
+        label: key.toString(),
+        value: value.toString(),
+      })),
+      validation: "required",
+      validationMessages: {
+        required: "Le statut est requis",
+      },
+    },
+    {
+      type: "select",
+      name: "priority",
+      options: Object.entries(Priority).map(([key, value]) => ({
+        label: key,
+        value: value.toString(),
+      })),
+      validation: "required",
+      validationMessages: {
+        required: "La priorité est requise",
+      },
+    },
+  ],
+  [
+    {
+      type: "textarea",
+      name: "description",
+      placeholder: "Décrivez le problème",
+      validation: "required",
+      validationMessages: {
+        required: "La description est requise",
+      },
+    },
+  ],
+  [
+  {
+    type: 'datetime-local',
+    label: 'Date limite',
+    name: 'dead_line',
+    validation: 'date_after',
+    validationMessages: {
+      date_after: 'La date doit être après la date actuelle.',
+    },
+    default: null,
+  }
+  ]
+];
 </script>
