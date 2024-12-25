@@ -52,11 +52,12 @@
 
 <script lang="ts" setup>
 import { useQuery } from "@tanstack/vue-query";
-import { Priority } from "~/utils/enum/Priority";
+import { useAuthStore } from "~/stores/auth";
 import { Status } from "~/utils/enum/Status";
 import type { FormKitProps } from "~/utils/interface/FormKitProps";
 
 const tickets = useTickets();
+const authStore = useAuthStore();
 
 const { data } = useQuery({
   queryKey: ["ticket"],
@@ -84,7 +85,8 @@ const ticket12LastMonths = computed(() => {
   return [];
 });
 
-const addTicketField: FormKitProps[][] = [
+const addTicketField = computed(() => {
+  const fields: FormKitProps[][] = [
   [
     {
       type: "text",
@@ -100,10 +102,12 @@ const addTicketField: FormKitProps[][] = [
     {
       type: "select",
       name: "status",
-      options: Object.entries(Status).map(([key, value]) => ({
-        label: key.toString(),
-        value: value.toString(),
-      })),
+      options: {
+        1:'Ouvert',
+        2:'En Attente',
+        3:'Résolue',
+        4:'Fermé'
+      },
       validation: "required",
       validationMessages: {
         required: "Le statut est requis",
@@ -112,10 +116,11 @@ const addTicketField: FormKitProps[][] = [
     {
       type: "select",
       name: "priority",
-      options: Object.entries(Priority).map(([key, value]) => ({
-        label: key,
-        value: value.toString(),
-      })),
+      options: {
+        1:'Faible',
+        2:'Moyenne',
+        3:'Important'
+      },
       validation: "required",
       validationMessages: {
         required: "La priorité est requise",
@@ -134,16 +139,23 @@ const addTicketField: FormKitProps[][] = [
     },
   ],
   [
-  {
-    type: 'datetime-local',
-    label: 'Date limite',
-    name: 'dead_line',
-    validation: 'date_after',
-    validationMessages: {
-      date_after: 'La date doit être après la date actuelle.',
-    },
-    default: null,
-  }
+    {
+      type: 'datetime-local',
+      label: 'Date limite',
+      name: 'dead_line',
+      validation: 'date_after',  // Validation uniquement si la date est sélectionnée
+      validationMessages: {
+        date_after: 'La date doit être après la date actuelle.',
+      },
+      default: null,
+    }
   ]
-];
+  ];
+
+  if(authStore.isAdmin){
+    //TODO: Ajouter les utilisateurs assignable
+  }
+
+  return fields
+})
 </script>

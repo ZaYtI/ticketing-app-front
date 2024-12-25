@@ -11,7 +11,8 @@
       <div v-for="(field, index) in props.fields" :key="index" class="field-wrapper">
         <div v-if="Array.isArray(field)" class="flex gap-4">
           <div v-for="(subField, subIndex) in field" :key="subIndex" class="flex-1">
-            <FormKit
+            <div>
+              <FormKit
               :type="subField.type"
               :name="subField.name"
               :label="subField.label"
@@ -22,12 +23,14 @@
               :classes="{
                 input: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
                 messages: 'text-red-600 text-xs',
+                label: 'text-gray-500 text-sm font-normal text-left'
               }"
             />
+            </div>
           </div>
         </div>
       </div>
-      <AuthButton type="submit" :label="submitLabel"/>
+      <AuthButton type="submit" :label="submitLabel" class="mx-auto"/>
     </div>
   </FormKit>
 </template>
@@ -69,7 +72,6 @@ form {
   justify-content: center;
   flex-direction: column;
   height: 100%;
-  text-align: center;
 }
 
 .input {
@@ -86,7 +88,6 @@ form {
   margin: 1rem 0 1rem 0;
 }
 
-/* Styles pour les groupes de champs */
 .flex {
   display: flex;
 }
