@@ -46,8 +46,22 @@ export function useTickets(){
         return response;
     }
 
+    const create = async(formData:FormData) => {
+        const response = await fetch('http://localhost:8000/api/ticket', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+
+        return response;
+    }
+
     return {
         getAllTicket,
-        getTicketChart
+        getTicketChart,
+        create
     }
 }

@@ -47,6 +47,7 @@
     title="Liste de vos tickets"
     query-key="tickets"
     :modal-field="addTicketField"
+    :modal-function="tickets.create"
   />
 </template>
 

@@ -90,6 +90,7 @@
     :is-modal-open="isModalOpen"
     @close-modal="closeModal"
     :fields="props.modalField"
+    :modal-function="props.modalFunction"
   />
 </template>
 <script lang="ts" setup>
@@ -119,6 +120,10 @@ const props = defineProps({
     type: Array as () => FormKitProps[][],
     required: true,
     default: () => [],
+  },
+  modalFunction:{
+    type:Function,
+    required:false
   }
 });
 

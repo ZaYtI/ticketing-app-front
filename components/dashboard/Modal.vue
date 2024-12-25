@@ -41,12 +41,12 @@
               </svg>
             </button>
           </div>
-          <!-- Modal body -->
           <div class="p-4 md:p-5">
             <Form
               :id="props.modalId"
               submit-label="Ajouter"
               :fields="props.fields"
+              @submit="handleSubmit"
             >
             </Form>
           </div>
@@ -77,6 +77,10 @@ const props = defineProps({
     type: Array as () => FormKitProps[][],
     required: true,
     default: () => [],
+  },
+  modalFunction:{
+    type:Function,
+    required:true
   }
 });
 
@@ -101,6 +105,16 @@ const leave = (el:any, done:any) => {
   el.style.transition = "opacity 0.3s";
   el.style.opacity = 0;
   done();
+};
+
+const handleSubmit = async (formData: any) => {
+  try {
+    const result = await props.modalFunction(formData);
+    console.log('Ticket créé avec succès', result);
+    closeModal();
+  } catch (error) {
+    console.error('Erreur lors de la création du ticket', error);
+  }
 };
 </script>
 
