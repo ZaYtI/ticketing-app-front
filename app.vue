@@ -8,9 +8,12 @@
 import { onMounted } from 'vue'
 import { useFlowbite } from '~/composables/useFlowbite';
 
-onMounted(() => {
+const auth = useAuth()
+
+onMounted(async () => {
     useFlowbite(() => {
         initFlowbite();
     })
+    await auth.checkAuth();
 })
 </script>

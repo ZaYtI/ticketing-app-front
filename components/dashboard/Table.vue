@@ -5,6 +5,7 @@
     <div v-if="data">
       <div class="flex flex-row-reverse p-2">
         <button
+          v-if="props.addValue"
           @click="openModal"
           class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-lg text-sm px-5 py-2.5"
           type="button"
@@ -85,6 +86,7 @@
     </div>
   </CardContainer>
   <DashboardModal
+    v-if="props.addValue"
     modal-title="Ajouter un ticket"
     modal-id="add-ticket"
     :is-modal-open="isModalOpen"
@@ -124,6 +126,10 @@ const props = defineProps({
   modalFunction:{
     type:Function,
     required:false
+  },
+  addValue:{
+    type:Boolean,
+    default:false
   }
 });
 

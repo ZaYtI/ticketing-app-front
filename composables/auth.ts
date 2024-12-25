@@ -62,6 +62,7 @@ export function useAuth() {
     } catch (error) {
       authStore.user = null;
       authStore.isAuthenticated = false;
+      navigateTo('/')
     }
   }
 

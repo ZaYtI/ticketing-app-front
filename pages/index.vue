@@ -32,7 +32,6 @@ async function onSubmitLogin(formData: Record<string, any>) {
       navigateTo("/dashboard");
       auth.checkAuth();
     })
-    .catch();
 }
 
 async function onSubmitRegister(formData: Record<string, any>) {

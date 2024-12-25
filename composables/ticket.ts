@@ -1,6 +1,7 @@
 import type { PaginatedResponse } from "~/utils/interface/paginated";
 import type { TicketData } from "~/utils/interface/Tickets";
 import type { ChartInfo } from "~/utils/interface/ChartInfo";
+import type { User } from "~/utils/interface/Users";
 
 
 export function useTickets(){
@@ -46,7 +47,19 @@ export function useTickets(){
         return response;
     }
 
-    const create = async(formData:FormData) => {
+    async function getAssignableUser():Promise<User[]>{
+        const response = await $fetch('http://localhost:8000/api/ticket/assignable',{
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+        })
+
+        return response as User[]
+    }
+
+    const create = async(formData:FormData) =>{
         const response = await fetch('http://localhost:8000/api/ticket', {
             method: 'POST',
             credentials: 'include',
@@ -62,6 +75,7 @@ export function useTickets(){
     return {
         getAllTicket,
         getTicketChart,
-        create
+        create,
+        getAssignableUser
     }
 }

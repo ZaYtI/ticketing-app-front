@@ -48,17 +48,83 @@
     query-key="tickets"
     :modal-field="addTicketField"
     :modal-function="tickets.create"
+    add-value
   />
 </template>
 
 <script lang="ts" setup>
 import { useQuery } from "@tanstack/vue-query";
-import { useAuthStore } from "~/stores/auth";
 import { Status } from "~/utils/enum/Status";
 import type { FormKitProps } from "~/utils/interface/FormKitProps";
+import { ref, computed } from "vue";
 
 const tickets = useTickets();
-const authStore = useAuthStore();
+
+const addTicketField = ref<FormKitProps[][]>([
+  [
+    {
+      type: "text",
+      name: "title",
+      placeholder: "Entrez le titre du ticket",
+      validation: "required",
+      validationMessages: {
+        required: "Le titre est requis",
+      },
+    },
+  ],
+  [
+    {
+      type: "select",
+      name: "status",
+      options: {
+        1: "Ouvert",
+        2: "En Attente",
+        3: "Résolue",
+        4: "Fermé",
+      },
+      validation: "required",
+      validationMessages: {
+        required: "Le statut est requis",
+      },
+    },
+    {
+      type: "select",
+      name: "priority",
+      options: {
+        1: "Faible",
+        2: "Moyenne",
+        3: "Important",
+      },
+      validation: "required",
+      validationMessages: {
+        required: "La priorité est requise",
+      },
+    },
+  ],
+  [
+    {
+      type: "textarea",
+      name: "description",
+      placeholder: "Décrivez le problème",
+      validation: "required",
+      validationMessages: {
+        required: "La description est requise",
+      },
+    },
+  ],
+  [
+    {
+      type: "datetime-local",
+      label: "Date limite",
+      name: "dead_line",
+      validation: "date_after",
+      validationMessages: {
+        date_after: "La date doit être après la date actuelle.",
+      },
+      default: null,
+    },
+  ],
+]);
 
 const { data } = useQuery({
   queryKey: ["ticket"],
@@ -85,78 +151,4 @@ const ticket12LastMonths = computed(() => {
   }
   return [];
 });
-
-const addTicketField = computed(() => {
-  const fields: FormKitProps[][] = [
-  [
-    {
-      type: "text",
-      name: "title",
-      placeholder: "Entrez le titre du ticket",
-      validation: "required",
-      validationMessages: {
-        required: "Le titre est requis",
-      },
-    },
-  ],
-  [
-    {
-      type: "select",
-      name: "status",
-      options: {
-        1:'Ouvert',
-        2:'En Attente',
-        3:'Résolue',
-        4:'Fermé'
-      },
-      validation: "required",
-      validationMessages: {
-        required: "Le statut est requis",
-      },
-    },
-    {
-      type: "select",
-      name: "priority",
-      options: {
-        1:'Faible',
-        2:'Moyenne',
-        3:'Important'
-      },
-      validation: "required",
-      validationMessages: {
-        required: "La priorité est requise",
-      },
-    },
-  ],
-  [
-    {
-      type: "textarea",
-      name: "description",
-      placeholder: "Décrivez le problème",
-      validation: "required",
-      validationMessages: {
-        required: "La description est requise",
-      },
-    },
-  ],
-  [
-    {
-      type: 'datetime-local',
-      label: 'Date limite',
-      name: 'dead_line',
-      validation: 'date_after',  // Validation uniquement si la date est sélectionnée
-      validationMessages: {
-        date_after: 'La date doit être après la date actuelle.',
-      },
-      default: null,
-    }
-  ]
-  ];
-
-  if(authStore.isAdmin){
-    //TODO: Ajouter les utilisateurs assignable
-  }
-
-  return fields
-})
 </script>
