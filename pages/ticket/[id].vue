@@ -37,6 +37,10 @@
           <strong class="block font-medium text-gray-700">Description:</strong>
           <p>{{ data.description }}</p>
         </div>
+        <div class="bg-white shadow-lg rounded-lg p-4 mb-4" v-if="data.dead_line">
+          <strong class="block font-medium text-gray-700">Date limite:</strong>
+          <DashboardDeadLineCell :value="data.dead_line" />
+        </div>
         <div class="bg-white shadow-lg rounded-lg p-4 mb-4">
           <strong class="block font-medium text-gray-700">Status:</strong>
           <DashboardEnumCell key-type="status" :value="data.status" />
@@ -107,6 +111,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { useRoute } from "vue-router";
 import type { FormKitProps } from "~/utils/interface/FormKitProps";
 import { useAuthStore } from "~/stores/auth";
+import { useTickets } from "~/composables/ticket";
 
 const route = useRoute();
 const tickets = useTickets();
