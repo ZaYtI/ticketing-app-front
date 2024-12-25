@@ -1,8 +1,7 @@
 <template>
-  <CardContainer>
+  <CardContainer v-if="data">
     <h1 class="text-2xl">{{ title }}</h1>
-    <div v-if="isPending">Chargement...</div>
-    <div v-if="data">
+    <div>
       <div class="flex flex-row-reverse p-2">
         <button
           v-if="props.addValue"
@@ -45,10 +44,13 @@
               class="border-b odd:bg-white even:bg-gray-50"
             >
               <td v-for="(value, key) in element" :key="key" class="px-6 py-4">
-                <template v-if="key.toString() === 'id' && props.linkTo!= null">
-                  <NuxtLink
-                  :to="props.linkTo+value">
-                    <span class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                <template
+                  v-if="key.toString() === 'id' && props.linkTo != null"
+                >
+                  <NuxtLink :to="props.linkTo + value">
+                    <span
+                      class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    >
                       #{{ value }}
                     </span>
                   </NuxtLink>
@@ -57,7 +59,7 @@
                   <DashboardDeadLineCell :value="value" />
                 </template>
                 <template v-else-if="key.toString() === 'created_at'">
-                  <DashboardDeadLineCell :value="value" no-color/>
+                  <DashboardDeadLineCell :value="value" no-color />
                 </template>
                 <template
                   v-else-if="
@@ -102,7 +104,7 @@
     modal-id="add-ticket"
     :is-modal-open="isModalOpen"
     @close-modal="closeModal"
-    :fields="props.modalField"  
+    :fields="props.modalField"
     :modal-function="props.modalFunction"
   />
 </template>
@@ -129,23 +131,23 @@ const props = defineProps({
     type: Array as () => ButtonAction[],
     default: [],
   },
-  modalField:{
+  modalField: {
     type: Array as () => FormKitProps[][],
     required: true,
     default: () => [],
   },
-  modalFunction:{
-    type:Function,
-    required:false
+  modalFunction: {
+    type: Function,
+    required: false,
   },
-  addValue:{
-    type:Boolean,
-    default:false
+  addValue: {
+    type: Boolean,
+    default: false,
   },
-  linkTo:{
+  linkTo: {
     type: String || null,
-    default:null
-  }
+    default: null,
+  },
 });
 
 const currentPage = ref(1);
