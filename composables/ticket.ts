@@ -2,11 +2,14 @@ import type { PaginatedResponse } from "~/utils/interface/paginated";
 import type { TicketData } from "~/utils/interface/Tickets";
 import type { ChartInfo } from "~/utils/interface/ChartInfo";
 import type { User } from "~/utils/interface/Users";
+import { useQueryClient } from "@tanstack/vue-query";
 
 
 export function useTickets(){
     const defaultLimit = 10;
     const defaultPages = 1;
+
+    const queryClient = useQueryClient();
 
     async function getAllTicket(
         limit = defaultLimit,
@@ -58,7 +61,7 @@ export function useTickets(){
                 },
             }
         );
-    
+        
         return response;
     }
 
@@ -74,9 +77,22 @@ export function useTickets(){
         return response as User[]
     }
 
-    const create = async(formData:FormData) =>{
+    async function create(formData:FormData){
         const response = await fetch('http://localhost:8000/api/ticket', {
             method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+        queryClient.invalidateQueries();
+        return response;
+    }
+
+    async function update (formData:FormData) {
+        const response = await fetch('http://localhost:8000/api/ticket', {
+            method: 'PUT',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
@@ -92,6 +108,7 @@ export function useTickets(){
         getTicketChart,
         create,
         getAssignableUser,
-        getTicketDetails
+        getTicketDetails,
+        update
     }
 }

@@ -94,12 +94,12 @@
     </div>
   </CardContainer>
   <DashboardModal
-    v-if="props.addValue"
+    v-if="props.addValue && props.modalFunction"
     modal-title="Ajouter un ticket"
     modal-id="add-ticket"
     :is-modal-open="isModalOpen"
     @close-modal="closeModal"
-    :fields="props.modalField"
+    :fields="props.modalField"  
     :modal-function="props.modalFunction"
   />
 </template>

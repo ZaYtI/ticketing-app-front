@@ -1,35 +1,61 @@
 <template>
   <div class="grid grid-cols-12 gap-6 min-h-screen">
-    <!-- Section Gauche : Affichage des détails du ticket -->
     <CardContainer class="col-span-12 md:col-span-7 p-4 h-full">
-      <h2 class="text-xl font-semibold mb-4">Détails du Ticket</h2>
-      
-      <!-- Vérifier si les données sont disponibles et les afficher -->
-      <div v-if="ticketDetails">
+      <div class="flex justify-between">
+        <h2 class="text-xl font-semibold mb-4">Détails du Ticket</h2>
+      <button
+            to="/"
+            class="flex items-center p-2 text-gray-900 rounded-lg white:text-white hover:bg-gray-100 white:hover:bg-gray-700 group"
+          >
+            <svg
+              class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 white:text-gray-400 group-hover:text-gray-900 white:group-hover:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.96 2.96 0 0 0 .13 5H5Z"
+              />
+              <path
+                d="M6.737 11.061a2.961 2.961 0 0 1 .81-1.515l6.117-6.116A4.839 4.839 0 0 1 16 2.141V2a1.97 1.97 0 0 0-1.933-2H7v5a2 2 0 0 1-2 2H0v11a1.969 1.969 0 0 0 1.933 2h12.134A1.97 1.97 0 0 0 16 18v-3.093l-1.546 1.546c-.413.413-.94.695-1.513.81l-3.4.679a2.947 2.947 0 0 1-1.85-.227 2.96 2.96 0 0 1-1.635-3.257l.681-3.397Z"
+              />
+              <path
+                d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z"
+              />
+            </svg>
+          </button>
+      </div>
+      <div v-if="data">
         <div class="bg-white shadow-lg rounded-lg p-4 mb-4">
           <strong class="block font-medium text-gray-700">Titre:</strong>
-          <p>{{ ticketDetails.title }}</p>
+          <p>{{ data.title }}</p>
         </div>
 
         <div class="bg-white shadow-lg rounded-lg p-4 mb-4">
           <strong class="block font-medium text-gray-700">Description:</strong>
-          <p>{{ ticketDetails.description }}</p>
+          <p>{{ data.description }}</p>
         </div>
 
         <div class="bg-white shadow-lg rounded-lg p-4 mb-4">
           <strong class="block font-medium text-gray-700">Status:</strong>
-          <DashboardEnumCell key-type="status" :value="ticketDetails.status" />
+          <DashboardEnumCell key-type="status" :value="data.status" />
+        </div>
+
+        <div class="bg-white shadow-lg rounded-lg p-4 mb-4">
+          <strong class="block font-medium text-gray-700">Priorité:</strong>
+          <DashboardEnumCell key-type="priority" :value="data.priority" />
         </div>
 
         <div class="bg-white shadow-lg rounded-lg p-4 mb-4">
           <strong class="block font-medium text-gray-700">Assigné à:</strong>
-          <p>{{ ticketDetails.assigner_to.email }}</p>
-        </div>
+
+          <a v-if="data.assigner_to != null" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" :href="'mailto:'+data.assigner_to.email">{{ data?.assigner_to.email }}</a>
+          <span v-else class="text-xs text-gray-400 ">Le ticket n'est pas encore assginer</span>
+        </div> 
 
       </div>
     </CardContainer>
-
-    <!-- Section Droite : Tableau de l'historique des statuts -->
     <CardContainer class="col-span-12 md:col-span-5 p-4 shadow-md rounded-lg h-full">
       <TableInfo :data="statusHistoryData" :columnKeys="columnKeys" />
     </CardContainer>
@@ -44,29 +70,16 @@ import { computed } from "vue";
 const tickets = useTickets();
 const route = useRoute();
 
-// Récupérer les données du ticket depuis l'API
 const { data, isPending } = useQuery({
   queryKey: ["ticket-details", route.params.id],
   queryFn: () => tickets.getTicketDetails(+route.params.id),
   retry: 1,
 });
 
-// Extraction des informations générales du ticket
-const ticketDetails = computed(() => {
-  return data.value ? {
-    title: data.value.title,
-    description: data.value.description,
-    status: data.value.status,
-    assigner_to: data.value.assigner_to,
-  } : null;
-});
-
-// Extraction de l'historique des statuts
 const statusHistoryData = computed(() => {
   return data.value?.statusHistory || [];
 });
 
-// Colonnes du tableau de l'historique des statuts
 const columnKeys = computed(() =>
   statusHistoryData.value.length ? Object.keys(statusHistoryData.value[0]) : []
 );

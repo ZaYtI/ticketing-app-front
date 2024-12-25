@@ -30,7 +30,7 @@
           class="border-b odd:bg-white even:bg-gray-50"
         >
           <td v-for="(value, key) in element" :key="key" class="px-6 py-4">
-            <template v-if="key.toString() === 'status' || key.toString() === 'priority'">
+            <template v-if="key.toString() === 'status'">
               <DashboardEnumCell :key-type="key.toString()" :value="+value" />
             </template>
             <template v-else-if="key.toString() === 'changedBy'">

@@ -128,7 +128,7 @@ const addTicketField = ref<FormKitProps[][]>([
 ]);
 
 const { data } = useQuery({
-  queryKey: ["ticket"],
+  queryKey: ["ticket-chart"],
   queryFn: () => tickets.getTicketChart(),
   retry: 1,
 });
