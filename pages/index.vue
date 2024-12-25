@@ -135,24 +135,24 @@ const registerFields: FormKitProps[][] = [
       <div class="overlay-container">
         <div class="overlay">
           <div class="overlay-panel overlay-left">
-            <h1 class="text-3xl">Welcome Back!</h1>
+            <h1 class="text-3xl">Connexion!</h1>
             <p>
-              To keep connected with us please login with your personal info
+              Si tu as déjà un compte
             </p>
             <AuthButton
               overlay-button
               @click="signInCallback"
-              label="Sign In"
+              label="Connexion"
             />
           </div>
           <div class="overlay-panel overlay-right">
-            <h1 class="text-3xl">Hello, Friend!</h1>
-            <p>Enter your personal details and start journey with us</p>
+            <h1 class="text-3xl">Enregistrement !</h1>
+            <p>Si tu n'as pas de compte</p>
             <AuthButton
               overlay-button
               id="signUp"
               @click="signUpCallback"
-              label="Sign Up"
+              label="Enregistrement"
             />
           </div>
         </div>
