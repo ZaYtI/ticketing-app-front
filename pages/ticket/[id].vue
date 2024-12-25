@@ -62,7 +62,7 @@
           <a
             v-if="data.created_by != null"
             class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-            :href="'mailto:' + data.assign_to.email"
+            :href="'mailto:' + data.created_by.email"
             >{{ data?.created_by.email }}</a
           >
         </div>
@@ -75,9 +75,23 @@
       modal-title="Modifier le ticket"
       modal-id="update-ticket"
       :is-modal-open="isModalOpen"
-      :fields="updateTicketField"  
+      :fields="updateTicketField"
       :modal-function="tickets.update"
-    />
+    >
+    <FormKit
+        v-if="authStore.isAdmin && assignableUsers.length > 0"
+        type="select"
+        name="assigned_to_user_id"
+        placeholder="Assigner le ticket"
+        :options="assignableUsers"
+        :classes="{
+          input:
+            'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+          messages: 'text-red-600 text-xs',
+          label: 'text-gray-500 text-sm font-normal text-left',
+        }"
+      />
+    </DashboardModal>
 
     <CardContainer
       class="col-span-12 md:col-span-5 p-4 shadow-md rounded-lg h-full"
@@ -88,14 +102,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { useRoute } from "vue-router";
 import type { FormKitProps } from "~/utils/interface/FormKitProps";
+import { useAuthStore } from "~/stores/auth";
 
 const route = useRoute();
 const tickets = useTickets();
 const isModalOpen = ref(false);
+const authStore = useAuthStore()
 
 const { data } = useQuery({
   queryKey: ["ticket-details", route.params.id],
@@ -121,7 +137,7 @@ const updateTicketField = ref<FormKitProps[][]>([
         3: "Résolue",
         4: "Fermé",
       },
-      placeholder:"Status"
+      placeholder: "Status",
     },
     {
       type: "select",
@@ -131,7 +147,7 @@ const updateTicketField = ref<FormKitProps[][]>([
         2: "Moyenne",
         3: "Important",
       },
-      placeholder:"Priorité"
+      placeholder: "Priorité",
     },
   ],
   [
@@ -150,12 +166,22 @@ const updateTicketField = ref<FormKitProps[][]>([
   ],
 ]);
 
+const assignableUsers = ref<any[]>([]);
+
+onMounted(async () => {
+  const users = await tickets.getAssignableUser();
+  assignableUsers.value = users.map(user => ({
+    label: user.email,
+    value: user.id.toString(),
+  }));
+});
+
 function openModal() {
   isModalOpen.value = true;
 }
 
 function closeModal() {
-  console.log('close modal');
+  console.log("close modal");
   isModalOpen.value = false;
 }
 
@@ -167,4 +193,3 @@ const columnKeys = computed(() =>
   statusHistoryData.value.length ? Object.keys(statusHistoryData.value[0]) : []
 );
 </script>
-

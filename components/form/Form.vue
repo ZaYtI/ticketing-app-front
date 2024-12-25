@@ -30,6 +30,7 @@
           </div>
         </div>
       </div>
+      <slot />
       <AuthButton type="submit" :label="submitLabel" class="mx-auto"/>
     </div>
   </FormKit>

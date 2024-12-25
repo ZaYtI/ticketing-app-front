@@ -48,6 +48,7 @@
               :fields="props.fields"
               @submit="handleSubmit"
             >
+              <slot />
             </Form>
           </div>
         </div>
