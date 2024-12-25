@@ -61,10 +61,6 @@ import { defineProps, defineEmits } from "vue";
 import type { FormKitProps } from "~/utils/interface/FormKitProps";
 
 const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
   modalId: {
     type: String,
     required: true,
